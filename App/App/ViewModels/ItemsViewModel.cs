@@ -1,84 +1,36 @@
-﻿using App.Models;
-using App.Views;
-using System;
-using System.Collections.ObjectModel;
+﻿using Core.Model;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using Core;
 using Xamarin.Forms;
 
 namespace App.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
-        private Item _selectedItem;
+        private readonly SettingsService settingsService;
 
-        public ObservableCollection<Item> Items { get; }
-        public Command LoadItemsCommand { get; }
-        public Command AddItemCommand { get; }
-        public Command<Item> ItemTapped { get; }
+        public UserSettings Settings { get; set; }
+
+        public Command SaveChangesCommand { get; }
 
         public ItemsViewModel()
         {
-            Title = "Browse";
-            Items = new ObservableCollection<Item>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            Title = "Settings";
+            this.SaveChangesCommand = new Command(this.SaveChangesCommandExecute);
 
-            ItemTapped = new Command<Item>(OnItemSelected);
+            this.settingsService = new SettingsService();
 
-            AddItemCommand = new Command(OnAddItem);
+            this.Settings = this.settingsService.ReadSettings();
         }
 
-        async Task ExecuteLoadItemsCommand()
+        private void SaveChangesCommandExecute(object obj)
         {
-            IsBusy = true;
-
-            try
-            {
-                Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
-                foreach (var item in items)
-                {
-                    Items.Add(item);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            this.settingsService.StoreSettings(this.Settings);
+            Trace.WriteLine("clicked on save: " + this.Settings.RemoteAddress);
         }
 
+        
         public void OnAppearing()
-        {
-            IsBusy = true;
-            SelectedItem = null;
-        }
-
-        public Item SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                SetProperty(ref _selectedItem, value);
-                OnItemSelected(value);
-            }
-        }
-
-        private async void OnAddItem(object obj)
-        {
-            await Shell.Current.GoToAsync(nameof(NewItemPage));
-        }
-
-        async void OnItemSelected(Item item)
-        {
-            if (item == null)
-                return;
-
-            // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
-        }
+        { }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Core;
 using Core.Model;
@@ -58,10 +60,11 @@ namespace App.ViewModels
 
                     this.TextContent = this.restService.GetContent();
                 }
-                catch
+                catch (Exception e)
                 {
                     this.UserMessage = "Could not fetch remote data!";
                     this.TextContent = this.localContentService.GetContent();
+                    Trace.WriteLine($"Fetch data: {e.Message}");
                 }
             }
             else

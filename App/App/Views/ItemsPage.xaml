@@ -7,38 +7,60 @@
              xmlns:model="clr-namespace:App.Models"  
              x:Name="BrowseItemsPage">
 
+    <ContentPage.BindingContext>
+        <local:ItemsViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Command="{Binding AddItemCommand}" />
+        <ToolbarItem Text="Save" Command="{Binding SaveChangesCommand}" />
     </ContentPage.ToolbarItems>
     <!--
       x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
       https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
     -->
-    <RefreshView x:DataType="local:ItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-        <CollectionView x:Name="ItemsListView"
-                ItemsSource="{Binding Items}"
-                SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout Padding="10" x:DataType="model:Item">
-                        <Label Text="{Binding Text}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="16" />
-                        <Label Text="{Binding Description}" 
-                            LineBreakMode="NoWrap"
-                            Style="{DynamicResource ListItemDetailTextStyle}"
-                            FontSize="13" />
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer 
-                                NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemsViewModel}}, Path=ItemTapped}"		
-                                CommandParameter="{Binding .}">
-                            </TapGestureRecognizer>
-                        </StackLayout.GestureRecognizers>
-                    </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </RefreshView>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <StackLayout Grid.Row="0" Orientation="Horizontal" Margin="0,8,0,8">
+            <CheckBox IsChecked="{Binding Path=Settings.SynchronizationEnabled}"></CheckBox>
+            <Label Text="Enable Synchronization" Margin="0,8,0,0" />
+        </StackLayout>
+
+        <Grid Grid.Row="1" Grid.Column="0" Margin="10,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Text="Address:" HorizontalTextAlignment="End" Margin="0,8,0,0" />
+            <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Path=Settings.RemoteAddress, Mode=TwoWay}" />
+
+            <Label Grid.Row="1" Grid.Column="0" Text="ID:" HorizontalTextAlignment="End" Margin="0,8,0,0" />
+            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Path=Settings.Identifier}" />
+
+            <Label Grid.Row="2" Grid.Column="0" Text="Secret:" HorizontalTextAlignment="End" Margin="0,8,0,0" />
+            <Entry Grid.Row="2" Grid.Column="1" Text="{Binding Path=Settings.Secret}" />
+
+            <StackLayout Grid.Row="3" Grid.Column="1" Orientation="Horizontal"  Margin="0,40,0,0">
+                <CheckBox IsChecked="{Binding Path=Settings.EncryptionEnabled}"></CheckBox>
+                <Label Text="Enable Encryption" Margin="0,8,0,0" />
+            </StackLayout>
+
+            <Label Grid.Row="4" Grid.Column="0" Text="Secret:" HorizontalTextAlignment="End" Margin="0,8,0,0" />
+            <Entry Grid.Row="4" Grid.Column="1" Text="{Binding Path=Settings.EncryptionKey}" />
+
+        </Grid>
+    </Grid>
+    
 </ContentPage>

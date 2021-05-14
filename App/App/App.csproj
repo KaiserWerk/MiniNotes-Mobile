@@ -3,6 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <ApplicationIcon>pencil.ico</ApplicationIcon>
+    <AssemblyName>MiniNotes Mobile</AssemblyName>
+    <Authors>Robin Kaiser</Authors>
+    <Company>KaiserWerk</Company>
+    <Description>The MiniNotes Mobile app. Can be used to synchronize to all devices using the MiniNotes Server app.
+
+Icon made by freepik.com</Description>
+    <Copyright />
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/KaiserWerk/MiniNotes-Mobile</PackageProjectUrl>
+    <PackageIcon>pencil (1).png</PackageIcon>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,5 +31,12 @@
     <Compile Update="Views\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Downloads\pencil (1).png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>
